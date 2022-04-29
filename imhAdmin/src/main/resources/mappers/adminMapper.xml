@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.co.imh.adminMapper">
+ 
+ 	<!-- 관리자 Login -->
+  	<select id="login" parameterType="java.util.Map" resultType="java.util.Map">
+  		select adminId, adminName
+  		from admin
+  		where adminId=#{adminId} and adminPw=#{adminPw}  		
+  	</select>	
+  	
+  	<!-- 관리자 전체목록 -->
+	<select id="list" resultType="admin">
+	<![CDATA[
+		select *
+		from admin
+		order by adminJoindate desc
+		limit #{pageStart}, #{perPageNum}
+		]]>
+	</select>
+	
+	<!-- list Count-->	
+	<select id="listCount" resultType="java.lang.Integer">
+		select count(*) from admin
+	</select>
+	
+	<!-- 관리자 상세조회 -->
+	<select id="read" parameterType="java.lang.String" resultType="admin">
+		select *
+		from admin
+		where adminId = #{adminId}
+	</select>
+
+	<!-- 관리자 등록-->
+	<insert id="register" parameterType="admin">
+		insert into admin( adminId, adminPw, adminEno, adminName, adminBirth, adminPhone, adminEmail, adminImage, 
+							adminDno, adminJoindate, adminAuth, adminState)
+		values (#{adminId}, #{adminPw}, #{adminEno}, #{adminName}, #{adminBirth}, #{adminPhone}, #{adminEmail}, #{adminImage},
+				#{adminDno}, now(), #{adminAuth}, 0)
+	</insert>
+
+	<!-- 관리자 정보 수정-->
+	<update id="modify" parameterType="admin" >
+		update admin
+		<set>
+		<if test="adminName != null">adminName=#{adminName},</if>
+		<if test="adminBirth != null">adminBirth=#{adminBirth},</if>
+		<if test="adminPhone != null">adminPhone=#{adminPhone},</if>
+		<if test="adminEmail != null">adminEmail=#{adminEmail},</if>
+		<if test="adminImage != null">adminImage=#{adminImage},</if>
+		<if test="adminAuth != null">adminAuth=#{adminAuth}</if>
+		</set>
+		where adminId = #{adminId}
+	</update>
+	
+	<!-- 관리자 삭제 (계정미사용으로 변경) -->
+	<update id="delete" parameterType="java.lang.String">
+		update admin
+		set
+		adminState = 1
+		where adminId = #{adminId}
+	</update>
+	
+  </mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  

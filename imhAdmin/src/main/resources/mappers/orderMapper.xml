@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.co.imh.orderMapper">
+
+	<resultMap id="order" type="kr.co.imh.domain.Order" >
+		<result property="orderCode" column="orderCode" />
+		<result property="orderId" column="orderId" />
+    	<result property="orderName" column="userName" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="orderRegdate" column="orderRegdate" />
+    	<result property="orderRegtime" column="orderRegtime" />
+    	<result property="orderState" column="orderState" jdbcType="VARCHAR" javaType="java.lang.String" />
+ 		 <result property="orderday" column="orderday" />
+  
+    	<result property="orderCode" column="itemCode" />
+    	<result property="itemProduct" column="itemProduct" />
+    	<result property="productName" column="productName" />
+    	<result property="itemCount" column="itemCount" />
+    	
+    	<result property="amountNo" column="amountNo" />
+    	<result property="orderCode" column="amountCode" />
+    	<result property="amountProduct" column="amountProduct" />
+    	<result property="amountDcharge" column="amountDcharge" />
+    	<result property="amountCoupon" column="amountCoupon" />
+    	<result property="amountTotal" column="amountTotal" />
+    	
+    	<result property="addressNo" column="addressNo" />
+    	<result property="orderCode" column="addressCode" />
+    	<result property="addressName" column="addressName" />
+    	<result property="addressPhone" column="addressPhone" />
+    	<result property="addressShip" column="addressShip" />
+    	<result property="addressMemo" column="addressMemo" />
+    	<result property="addressSort" column="addressSort" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="addressRegdate" column="addressRegdate" />
+    	<result property="addressRegtime" column="addressRegtime" />
+    	<result property="addressDate" column="addressDate" />
+    	
+    	<result property="payNo" column="payNo" />
+    	<result property="orderCode" column="payCode" />
+    	<result property="payKind" column="payKind" />
+    	<result property="payPoint" column="payPoint" />
+    	<result property="paySort" column="paySort" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="payPrice" column="payPrice" />
+    	<result property="payRegdate" column="payRegdate" />
+    	<result property="payRegTime" column="payRegTime" />
+    	<result property="payDate" column="payDate" />
+    	
+    	<result property="deliveryNo" column="deliveryNo" />
+    	<result property="orderCode" column="deliveryCode" />
+    	<result property="deliveryState" column="deliveryState" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="deliveryName" column="deliveryName" />
+    	<result property="deliveryNum" column="deliveryNum" />
+    	<result property="deliveryRegdate" column="deliveryRegdate" />
+    	<result property="deliveryRegtime" column="deliveryRegtime" />
+    	<result property="deliveryDate" column="deliveryDate" />
+    	
+    	<result property="cancelNo" column="cancelNo" />
+    	<result property="orderCode" column="cancelCode" />
+    	<result property="cancelPrice" column="cancelPrice" />
+    	<result property="cancelContent" column="cancelContent" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="cancelRegdate" column="cancelRegdate" />
+    	<result property="cancelRegtime" column="cancelRegtime" />
+    	
+    	<result property="refundNo" column="refundNo" />
+    	<result property="orderCode" column="refundCode" />
+    	<result property="refundPrice" column="refundPrice" />
+    	<result property="refundState" column="refundState" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="refundName" column="refundName" jdbcType="VARCHAR" javaType="java.lang.String" />
+    	<result property="refundRegdate" column="refundRegdate" />
+    	<result property="refundRegtime" column="refundRegtime" />
+    	<result property="refundDate" column="refundDate" />
+	</resultMap>
+
+	
+	<!-- leftjoin -->
+	<sql id="leftJoin">
+		orderItem AS i LEFT OUTER JOIN orderInfo AS o
+		ON o.orderCode
+		= i.itemCode
+		LEFT OUTER JOIN orderAmount AS a
+		ON o.orderCode =
+		a.amountCode
+		LEFT OUTER JOIN orderAddress AS ars
+		ON o.orderCode =
+		ars.addressCode
+		LEFT OUTER JOIN orderPay AS pay
+		ON o.orderCode =
+		pay.payCode
+		LEFT OUTER JOIN orderCansel AS c
+		ON o.orderCode =
+		c.cancelCode
+		LEFT OUTER JOIN orderRefund AS r
+		ON o.orderCode =
+		r.refundCode
+		LEFT OUTER JOIN userinfo AS u
+		ON o.orderId = u.userId
+		LEFT
+		OUTER JOIN product AS p
+		ON i.itemProduct = p.productCode
+	</sql>
+
+	<!-- right join -->
+	<sql id="rightJoin">
+		RIGHT JOIN orderItem AS i
+		ON o.orderCode= i.itemCode
+		RIGHT
+		JOIN orderAmount AS a
+		ON o.orderCode = a.amountCode
+		RIGHT JOIN
+		orderAddress AS ars
+		ON o.orderCode = ars.addressCode
+		RIGHT JOIN orderPay
+		AS pay
+		ON o.orderCode = pay.payCode
+		RIGHT JOIN orderCansel AS c
+		ON
+		o.orderCode = c.cancelCode
+		RIGHT JOIN orderRefund AS r
+		ON o.orderCode =
+		r.refundCode
+		RIGHT JOIN userinfo AS u
+		ON o.orderId = u.userId
+		RIGHT JOIN
+		product AS p
+		ON i.itemProduct = p.productCode
+	</sql>
+
+
+	<!-- search SQL -->
+	<sql id="search">
+		<if test="condition == 'order_orderCode'">
+			orderCode=#{keyword}
+		</if>
+		<if test="condition == 'order_orderName'">
+			userName=#{keyword}
+		</if>
+		<if test="condition == 'order_orderState'">
+			orderState=${keyword}
+		</if>
+		<if test="condition == 'order_orderRegdate'">
+			orderRegdate=#{keyword}
+		</if>
+		<if test="condition == 'order_payDate'">
+			orderayDate=#{keyword}
+		</if>
+		<if test="condition == 'order_orderday'">
+			orderayDate=#{keyword}
+		</if>
+	</sql>
+	
+
+	<!-- search -->
+	<sql id="search2">
+		<if test="type != null and keyword != null">
+			<trim prefix="(" suffix=") AND " prefixOverrides="OR">
+				<foreach item="type" collection="typeArr">
+					<trim prefix="OR">
+						<choose>
+							<when test="type =='T'.toString()">
+								(TITLE LIKE '%'||#{keyword})||'%')
+							</when>
+							<when test="type =='C'.toString()">
+								(CONTENT LIKE '%'||#{keyword})||'%')
+							</when>
+							<when test="type =='W'.toString()">
+								(WRITER LIKE '%'||#{keyword})||'%')
+							</when>
+						</choose>
+					</trim>
+				</foreach>
+			</trim>
+		</if>
+	</sql>
+
+	<!-- day -->
+	<sql id="payDate">
+		<if test="startday != null and keyword != endday">
+			<where>
+				payRegdate BETWEEN #{startday} AND #{endday}
+			</where>
+		</if>
+	</sql>
+
+	<!-- ORDER BY Sequence SQL -->
+	<sql id="seq">
+		<if test="seq != null ">
+			<if test="seq == 'order_orderday'">ORDER BY orderRegdate #{seq}
+			</if>
+			<if test="seq == 'order_payDate'"> ORDER BY payRegdate #{seq}
+			</if>
+		</if>
+	</sql>
+
+
+
+	<!-- 주문상태 SQL -->
+	<sql id="orderState">
+		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(orderState,
+		1,'결제대기'), 2, '결제완료'),3, '상품준비중'),4, '발송완료'),5, '취소접수중'),6, '환불완료'),7,
+		'환불철회') AS orderState
+	</sql>
+	<!-- 배송수정자 SQL -->
+	<sql id="addressSort">
+		REPLACE(REPLACE(addressSort, 1, '회원'), 2, 관리자) AS addressSort
+	</sql>
+
+	<!-- 결제상태 SQL -->
+	<sql id="paySort">
+		REPLACE(REPLACE(REPLACE(paySort, 1,'결제대기'), 2, '결제완료'),3, '결제취소환불') AS paySort
+	</sql>
+
+	<!-- 배송상태 SQL -->
+	<sql id="deliveryState">
+		REPLACE(REPLACE(deliveryState, 1, '발송완료'), 2, 발송취소) AS deliveryState
+	</sql>
+
+	<!-- 취소사유 SQL -->
+	<sql id="cancelContent">
+		REPLACE(REPLACE(REPLACE(cancelContent, 1,'단순변심'), 2, '상품품절'),3, '파손불량') AS cancelContent
+	</sql>
+	<!-- 환불구분 SQL -->
+	<sql id="refundState">
+		REPLACE(REPLACE(REPLACE(refundState, 1,'환불접수 대기중'), 2, '환불승인'),3, '취소철회') AS refundState
+	</sql>
+	<!-- 환불처리자 SQL -->
+	<sql id="refundName">
+		REPLACE(REPLACE(refundName, 1, 'system'), 2, 관리자) AS refundName
+	</sql>
+
+
+	<!-- 주문조회 전체목록 -->
+	<select id="orderListAll" resultMap="order" >
+		SELECT orderCode, orderId, userName ,orderState,
+		concat(payRegdate,payRegTime) AS payDate , productName, format(amountTotal,0) AS amountTotal, 
+		format(payPrice,0) AS payPrice
+		FROM
+		<include refid="leftJoin" />
+		<where>	
+			<include refid="search" />
+			<include refid="seq" />
+		</where>
+		<choose>
+			<otherwise>
+				ORDER BY payDate DESC
+			</otherwise>
+		</choose>
+		LIMIT #{pageStart}, #{perPageNum}
+	</select>
+
+
+
+	<!-- order 발주대기 listAll -->
+	<select id="readyListAll" resultMap="order">
+		SELECT orderCode, orderState
+		, concat(payRegdate,payRegTime) AS payDate , userName ,
+		format(amountTotal,0) AS amountTotal
+		,itemProduct, productName
+		FROM
+		<include refid="leftJoin" />
+		<where>
+			<include refid="search" />
+			<![CDATA[ AND 1< orderState && orderState <=3 ]]>
+			<include refid="seq" />
+		</where>
+		<choose>
+			<otherwise>
+				ORDER BY payDate ASC
+			</otherwise>
+		</choose>
+		LIMIT #{pageStart}, #{perPageNum}
+	</select>
+
+	<!-- 배송현황 전체조회 -->
+<select id="deliveryListAll" resultMap="order">
+		SELECT orderCode , concat(deliveryRegdate
+		,deliveryRegtime) AS deliveryDate,
+		deliveryName, deliveryNum, deliveryState
+		FROM
+		<include refid="leftJoin" />
+		<where>
+		<include refid="search" />
+			AND orderState=4
+		</where>
+		ORDER BY o.ordeRegdate, o.orderRegtime DESC
+		LIMIT #{pageStart}, #{perPageNum}
+	</select>
+
+	<!-- 취소관리 전체조회 -->
+	<select id="canselListAll" resultMap="order">
+		SELECT orderCode AS cancelCode , orderState, refundState,
+		concat(cancelRegdate ,cancelRegtime) AS cancelDate, concat(refundRegdate ,refundRegtime) AS refundDate
+		FROM
+		<include refid="leftJoin" />
+		<where>
+			<include refid="search" />
+			<![CDATA[ AND 4< orderState && orderState <=7 ]]>
+		</where>
+		ORDER BY o.ordeRegdate, o.orderRegtime DESC
+		LIMIT #{pageStart}, #{perPageNum}
+	</select>
+
+	<!-- count -->
+	<select id="totalCount" resultType="java.lang.Integer">
+		SELECT COUNT(*)
+		FROM 
+		<include refid="leftJoin" />
+		<where>
+			<include refid="search" />
+		</where>
+	</select>
+
+	<!-- 회원주문 단일조회 -->
+	<select id="getOrder" resultMap="order">
+		SELECT  *
+		FROM
+		<include refid="leftJoin" />
+		WHERE orderCode=#{orderCode} AND orderId=#{orderId}
+	</select>
+	
+
+	<!-- CS 상태조회 -->
+	<select id="getCS" resultType="java.lang.String">
+		SELECT orderState
+		FROM
+		<include refid="leftJoin" />
+		WHERE orderCode=#{orderCode} AND orderState=#{orderState}
+	</select>
+
+	<!-- 주문수량보기 -->
+	<select id="getItemCount" parameterType="java.lang.String"
+		resultType="order">
+		SELECT orderCode, itemProduct, productName, itemCount
+		FROM
+		<include refid="leftJoin" />
+		WHERE orderCode=#{orderCode}
+	</select>
+
+	<!-- 배송 등록 -->
+	<insert id="regDelivery" parameterType="order">
+		INSERT INTO orderDelivery
+		(deliveryCode, deliveryState, deliveryName, deliveryNum,
+		deliveryRegdate, cancelRegtime)
+		VALUES (deliveryCode=#{orderCode} ,
+		deliveryState=1 , deliveryName=${deliveryName},
+		deliveryNum=${deliveryNum},
+		CURDATE() , CURTIME())
+	</insert>
+
+	<!-- 취소접수 -->
+	<insert id="regCancel" parameterType="order">
+		INSERT INTO orderCansel
+		(cancelCode, cancelPrice, cancelContent, cancelRegdate, cancelRegtime)
+		VALUES (cancelCode=#{orderCode} , cancelPrice=#{cancelPrice} ,
+		cancelContent=${cancelContent},
+		CURDATE() , CURTIME())
+	</insert>
+
+	<!-- 환불접수 -->
+	<insert id="regRefund" parameterType="order">
+		INSERT INTO orderRefund
+		(refundCode, refundPrice, refundState, refundName, refundRegdate,
+		refundRegtime)
+		VALUES (refundCode=#{orderCode} ,
+		refundPrice=#{refundPrice} , refundState=${refundState},
+		refundName=${refundName},
+		refundRegdate=#{refundRegdate} ,
+		refundRegtime=#{refundRegtime})
+	</insert>
+
+
+	<!-- CS 상태변경 -->
+	<update id="orderCheck" parameterType="order">
+		UPDATE orderInfo AS o
+		<include refid="rightJoin" />
+		<set>
+			<if test="orderState != null">orderState=${orderState}</if>
+		</set>
+		WHERE orderCode=#{orderCode}
+	</update>
+
+	<!-- 결제 상태변경 -->
+	<update id="payCheck" parameterType="order">
+		UPDATE orderInfo AS o
+		<include refid="rightJoin" />
+		<set>
+			<if test="paySort != null">paySort=3</if>
+			<if test="payRegdate != null">payRegdate=#{payRegdate},</if>
+			<if test="payRegTime != null">payRegTime=#{payRegTime}</if>
+		</set>
+		WHERE cancelCode=#{orderCode}
+	</update>
+
+	<!-- 환불 상태변경 -->
+	<update id="refundCheck" parameterType="order">
+		UPDATE orderInfo AS o
+		<include refid="rightJoin" />
+		<set>
+			<if test="refundState != null">refundState=${refundState},</if>
+			<if test="refundName != null">refundName=#{refundName},</if>
+			<if test="refundRegdate != null">refundRegdate=#{refundRegdate},</if>
+			<if test="refundRegtime != null">refundRegtime=#{refundRegtime}</if>
+		</set>
+		WHERE refundCode=#{orderCode}
+	</update>
+	
+	<!-- 배송정보 수정 -->
+	<update id="modifyDlivery" parameterType="order">
+		UPDATE orderInfo AS o
+		<include refid="rightJoin" />
+		<set>
+			<if test="deliveryState != null">deliveryState=${deliveryState},</if>
+			<if test="deliveryName != deliveryName">deliveryNum=#{deliveryNum},</if>
+			<if test="deliveryNum != null">deliveryNum=#{deliveryNum},</if>
+			<if test="deliveryRegdate != null">deliveryRegdate=#{deliveryRegdate},</if>
+			<if test="deliveryRegtime != null">deliveryRegtime=#{deliveryRegtime},</if>
+		</set>
+		WHERE deliveryCode=#{orderCode}
+	</update>
+
+	<!-- 주소지 수정 -->
+	<update id="modifyAddress" parameterType="order">
+		UPDATE orderInfo AS o
+		<include refid="rightJoin" />
+		<set>
+			<if test="addressName != null">addressName=${addressName},</if>
+			<if test="addressPhone != null">addressPhone=#{addressPhone},</if>
+			<if test="addressShip != null">addressShip=#{addressShip},</if>
+			<if test="addressMemo != null">addressMemo=#{addressMemo},</if>
+			<if test="addressSort != null">addressSort=#{addressSort},</if>
+			addressRegdate=CURDATE() , addressRegtime=CURTIME()
+		</set>
+		WHERE refundCode=#{orderCode}
+	</update>
+
+</mapper>

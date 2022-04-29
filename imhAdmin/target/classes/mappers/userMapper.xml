@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="kr.co.imh.userMapper">
+ 
+ 	<!-- user Login -->
+  	<select id="login" parameterType="java.util.Map" resultType="java.util.Map">
+  		select userId, userNickname
+  		from userinfo
+  		where userId=#{userId} and userPassword=#{userPassword}  		
+  	</select>	
+  	
+  	<!-- user 전체목록  -->
+	<select id="list" resultType="user">
+		select *
+		from userinfo
+		where userState = 0
+		order by userJoindate desc
+	</select>
+	
+		<!-- list Count-->	
+	<select id="listCount" resultType="java.lang.Integer">
+		select count(*) from userinfo
+	</select>
+	
+	<!-- user 상세조회 -->
+	<select id="read" parameterType="java.lang.String" resultType="user">
+		select *
+		from userinfo
+		where userId = #{userId}
+	</select>
+
+	<!-- user 등록-->
+	<insert id="register" parameterType="user">
+		insert into userinfo( userId, userPassword, userAuthkey, userAuth, userName, userNickname, userImage, userMarketing, 
+							userCoupon, userPoint, userGrade, userTotalPrice, userJoindate, userState, userDropdate, userBlacklist)
+		values (#{userId}, #{userPassword}, #{userAuthkey}, #{userAuth}, #{userName}, #{userNickname}, #{userImage}, #{userMarketing},
+				#{userCoupon}, 3000, A, 0, #{userJoindate}, null, null)
+	</insert>
+
+	<!-- user 수정-->
+	<update id="modify" parameterType="user" >
+		update userinfo
+		<set>
+		<if test="userName != null">userName=#{userName},</if>
+		<if test="userNickname != null">userNickname=#{userNickname},</if>
+		<if test="userImage != null">userImage=#{userImage},</if>
+		<if test="userMarketing != null">userMarketing=#{userMarketing},</if>
+		<if test="userPoint != null">userPoint=#{userPoint},</if>
+		userBlacklist=1
+		</set>
+		where userId = #{userId}
+	</update>
+	
+	<!-- user 삭제 (계정미사용으로 변경) -->
+	<update id="delete" parameterType="java.lang.String">
+		update userinfo
+		<set>
+			userState=1,
+			userDropdate=now()
+		</set>
+		where userId = #{userId}
+	</update>
+	
+  </mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  
