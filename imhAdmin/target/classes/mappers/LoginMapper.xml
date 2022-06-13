@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <mapper namespace="com.imh.admin.LoginMapper">
+  
+  	<resultMap id="loginVO" type="com.imh.admin.vo.admin.LoginVO" >
+		<result property="adminId" column="adminId" />
+		<result property="adminName" column="adminName" />
+		<result property="adminState" column="adminState" />
+	</resultMap>
+ 
+ 	<!-- admin check -->
+  	<select id="adminCheck" parameterType="java.util.Map" resultType="java.lang.String">
+  	/*admin check*/
+  	SELECT
+  	 	  COUNT(adminId)
+  	FROM
+  		admin
+  	WHERE
+  		adminId=#{adminId} AND adminPwd=#{adminPwd} AND adminAuth ='Y' AND adminState='Y' 		
+  	</select>
+  	
+  	<!-- admin selectOnt -->
+  	<select id="adminSelectOne" parameterType="java.util.Map" resultMap="loginVO">
+  	/*admin selectOne*/
+  	SELECT
+  	 	  adminId
+  	 	, adminName
+  	 	, adminState
+  	FROM
+  		admin
+  	WHERE
+  		adminId=#{adminId}		
+  	</select>	 	
+
+  </mapper>
+  
+  
+  
+  
+  
+  
+  
+  
+  
